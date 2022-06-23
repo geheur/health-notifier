@@ -4,23 +4,22 @@ import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
-@ConfigGroup("healthnotifier")
+@ConfigGroup(HealthNotifierPlugin.CONFIG_GROUP)
 public interface HealthNotifierConfig extends Config
 {
 	@ConfigItem(
 			position = 1,
 			keyName = "NPCName",
-			name = "NPC Name",
-			description = "The name of the NPC, you want to be notified when it is below the specified health. " +
-					"Leave blank for it to fire on any NPC."
+			name = "NPC names (leave blank for any npc)",
+			description = "Name of the NPC you want to be notified about. Leave blank to have the plugin notify for all NPCs. You may add multiple names by separating them with commas or putting them on separate lines."
 	)
 	default String NPCName() { return ""; }
 
 	@ConfigItem(
 			position = 2,
 			keyName = "specifiedHealth",
-			name = "Specified Health",
-			description = "If the NPC's health is below or equal to this value it will send a notification"
+			name = "Health threshold",
+			description = "Health threshold to send a notification at."
 	)
-	default int specifiedHealth() { return 10; }
+	default int specifiedHealth() { return 0; }
 }

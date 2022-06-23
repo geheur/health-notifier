@@ -10,36 +10,23 @@ repositories {
 	mavenCentral()
 }
 
-def runeLiteVersion = '1.8.18-SNAPSHOT'
+def runeLiteVersion = '1.8.24.3'
 
 dependencies {
 	compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
 
-	compileOnly 'org.projectlombok:lombok:1.18.4'
-	annotationProcessor 'org.projectlombok:lombok:1.18.4'
+	compileOnly 'org.projectlombok:lombok:1.18.20'
+	annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
 	testImplementation 'junit:junit:4.12'
 	testImplementation group: 'net.runelite', name:'client', version: runeLiteVersion
-
-	testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.8.0'
-	testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.8.0'
-	testImplementation group: 'com.google.inject.extensions', name: 'guice-testlib', version: '4.1.0'
+	testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
 }
 
-group = 'com.banktaglayouts'
-version = '1.4.15'
+group = 'com.healthnotifier'
+version = '1.1'
 sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
-}
-
-task createProperties(dependsOn: processResources) {
-	doLast {
-		new File("$buildDir/resources/main/version.txt").text = "version=$project.version"
-	}
-}
-
-classes {
-	dependsOn createProperties
 }

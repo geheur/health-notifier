@@ -1,6 +1,8 @@
+*This plugin used to be hosted at https://github.com/Callum-A/health-notifier, old issues can be found there.*
+
 # Health Notifier
-This is a plugin that will notify you when a specified enemy is below a given health.
+This plugin notifies you when your target dies or is below a certain hp.
 # Usage
-To use the plugin simply go into settings and enable it. To specify the NPC and/or the health go into its config. Then
-simply type the name of the NPC you are attacking and want notifications for (leave blank for all NPCs), similarly you
-can set the health at which you will be notified using the corresponding field.
+In the plugin's config you can choose what health level you want to be notified at (set it to 0 to notify when the target dies).
+You can make the plugin notify only for certain npcs by adding the npc's name to the text box in the plugin's settings (leave it blank to notify for all npcs).
+You can have the plugin notify for more than one npc name by separating the names with commas or by putting them on separate lines.
