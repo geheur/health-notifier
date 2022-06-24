@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
-import net.runelite.api.events.ClientTick;
+import net.runelite.api.events.GameTick;
 import net.runelite.api.events.InteractingChanged;
 import net.runelite.client.Notifier;
 import net.runelite.client.config.ConfigManager;
@@ -49,6 +49,7 @@ public class HealthNotifierPlugin extends Plugin
 	private NPC currentNpc;
 	private boolean hasNotified = false;
 	private List<String> npcNames = new ArrayList<>();
+	private int healthThreshold = 0;
 
 	@Provides
 	public HealthNotifierConfig getConfig(ConfigManager configManager)
@@ -56,28 +57,42 @@ public class HealthNotifierPlugin extends Plugin
 		return configManager.getConfig(HealthNotifierConfig.class);
 	}
 
+	@Override
+	public void startUp() {
+		loadConfigValues();
+	}
+
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event)
 	{
 		if (!event.getGroup().equals(CONFIG_GROUP)) return;
 
+		loadConfigValues();
+	}
+
+	private void loadConfigValues()
+	{
 		npcNames = Arrays.stream(config.NPCName().split("[,\n]"))
 			.map(name -> name.toLowerCase().trim())
 			.filter(name -> !name.isEmpty())
 			.collect(Collectors.toList());
-		hasNotified = false;
-		// if we are logged in we should track the current target just in case the player is fighting it when they added it to the config.
+		// we don't know if the current target is tracked by the new npc names so reset it.
+		currentNpc = null;
 		if (client.getLocalPlayer() != null)
 		{
 			trackTarget(client.getLocalPlayer().getInteracting());
 		}
+
+		if (healthThreshold != config.specifiedHealth()) {
+			healthThreshold = config.specifiedHealth();
+			hasNotified = false;
+		}
 	}
 
 	@Subscribe
-	public void onClientTick(ClientTick e) {
+	public void onGameTick(GameTick e) {
 		if (currentNpc == null || hasNotified) return;
 
-		int healthThreshold = config.specifiedHealth();
 		if (healthThreshold == 0) {
 			if (currentNpc.getHealthRatio() == 0)
 			{
