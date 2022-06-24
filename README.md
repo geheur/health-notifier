@@ -1,4 +1,4 @@
-*This plugin used to be hosted at https://github.com/Callum-A/health-notifier, old issues can be found there.*
+*This plugin used to be hosted at https://github.com/Callum-A/health-notifier, old issues can be found there. [Callum-A](https://github.com/Callum-A) is the original author of this plugin.*
 
 # Health Notifier
 This plugin notifies you when your target dies or is below a certain hp.
