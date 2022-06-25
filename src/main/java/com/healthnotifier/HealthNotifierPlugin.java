@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
+import net.runelite.api.events.ActorDeath;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.InteractingChanged;
 import net.runelite.client.Notifier;
@@ -24,7 +25,7 @@ import net.runelite.client.util.Text;
 @Slf4j
 @PluginDescriptor(
 		name = "Target Health Notifier",
-		description = "Notifies you when the mob you are attacking is below certain health.",
+		description = "Notifies you when the mob you are attacking is below a certain health.",
 		tags = {"target","notify","hp","dead","kill","enemy"}
 )
 public class HealthNotifierPlugin extends Plugin
@@ -131,6 +132,15 @@ public class HealthNotifierPlugin extends Plugin
 		}
 
 		return (int)((maxHealth * healthRatio / healthScale) + 0.5f);
+	}
+
+	@Subscribe
+	public void onActorDeath(ActorDeath e) {
+		// This event is more reliable than checking getHealthRatio in GameTick. getHealthRatio does not work when entity hider hide dead npcs is on and it is unreliable when the game is running at low fps (yes, really).
+		if (e.getActor() == currentNpc && !hasNotified) {
+			notifier.notify("Your target is dead.");
+			hasNotified = true;
+		}
 	}
 
 	@Subscribe
