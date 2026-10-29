@@ -14,6 +14,7 @@ import net.runelite.api.events.ActorDeath;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.InteractingChanged;
 import net.runelite.client.Notifier;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -30,17 +31,11 @@ import net.runelite.client.util.Text;
 )
 public class HealthNotifierPlugin extends Plugin
 {
-	@Inject
-	private NPCManager npcManager;
-
-	@Inject
-	private Client client;
-
-	@Inject
-	private Notifier notifier;
-
-	@Inject
-	private HealthNotifierConfig config;
+	@Inject private NPCManager npcManager;
+	@Inject private Client client;
+	@Inject private ClientThread clientThread;
+	@Inject private Notifier notifier;
+	@Inject private HealthNotifierConfig config;
 
 	public static final String CONFIG_GROUP = "healthnotifier";
 
@@ -81,7 +76,9 @@ public class HealthNotifierPlugin extends Plugin
 		currentNpc = null;
 		if (client.getLocalPlayer() != null)
 		{
-			trackTarget(client.getLocalPlayer().getInteracting());
+			clientThread.invoke(() -> {
+				trackTarget(client.getLocalPlayer().getInteracting());
+			});
 		}
 
 		if (healthThreshold != config.specifiedHealth()) {
